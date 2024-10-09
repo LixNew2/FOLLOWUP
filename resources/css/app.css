@@ -1,0 +1,21 @@
+body{
+    margin: 0;
+}
+
+#menu{
+    background-color: #718096;
+    align-content: center;
+    padding: 10px;
+}
+
+#menu a{
+    color: white;
+}
+
+#menu a:hover{
+    color: deepskyblue;
+}
+
+#patient_table{
+    background-color: gray;
+}

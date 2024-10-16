@@ -60,7 +60,6 @@
             background-color: #c0392b;
         }
     </style>
-
     <div class="form-container">
         <h1 class="form-title">Ajouter un Patient</h1>
         <form action='{{ route('patient.add') }}' method='POST' class="patient-form">

@@ -128,8 +128,6 @@
             background-color: #f0f0f0;
         }
     </style>
-
-
     <div class="patient-list-container">
         <h1 class="page-title">Liste des patients</h1>
     </div>

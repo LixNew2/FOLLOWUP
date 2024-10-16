@@ -138,8 +138,6 @@
             display: None;
         }
     </style>
-
-
     <div class="patient-details-container">
         <div class="patient-details">
             <h1 class="patient-name">{{$patient->nom}} {{$patient->prenom}}</h1>

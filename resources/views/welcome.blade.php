@@ -118,7 +118,6 @@
             }
         }
     </style>
-
     <div class="header">
         <h1>Bienvenue chez FollowUP</h1>
         <p>Une application innovante pour le suivi des patients implantés cochléaires.</p>

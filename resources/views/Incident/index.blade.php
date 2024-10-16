@@ -114,7 +114,6 @@
             background-color: #f0f0f0;
         }
     </style>
-
     <div class="incident-list-container">
         <h1 class="page-title">Liste des incidents</h1>
     </div>

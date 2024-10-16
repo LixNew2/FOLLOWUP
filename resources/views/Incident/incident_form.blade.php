@@ -77,7 +77,6 @@
             background-color: #c0392b;
         }
     </style>
-
     <div class="form-container">
         <h1 class="form-title">Ajouter un Incident</h1>
         <form action='{{ route('incident.add') }}' method='POST' class="incident-form">

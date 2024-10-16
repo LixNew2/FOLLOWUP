@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Patient;
 use App\Models\Incident;
+use Illuminate\Http\Request;
 
 class CIncident extends Controller{
     public function show_page(): \Illuminate\Contracts\View\Factory|\Illuminate\Contracts\View\View|\Illuminate\Foundation\Application
@@ -42,5 +43,20 @@ class CIncident extends Controller{
         if(Incident::edit($id, $desc, $level, $date)){ // If incident has been edited, redirect
             return redirect("/patient_spec/{$patient_id}");
         };
+    }
+
+
+    // FORM
+
+    public function show_page_form(): \Illuminate\Contracts\View\Factory|\Illuminate\Contracts\View\View|\Illuminate\Foundation\Application{
+        $patients = Patient::all(); // Get all incidents in the table Incident
+        return view('Incident/incident_form', compact('patients'));
+    }
+
+    public function add_incident(Request $request){
+        if(Incident::add($request)){ // If incidents has been added, redirect
+            return redirect("/incident");
+        };
+
     }
 }

@@ -51,7 +51,6 @@
         }
 
         .content ul li {
-            margin-bottom:
             padding-left: 30px;
             position: relative;
             font-size: 18px;

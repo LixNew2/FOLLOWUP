@@ -127,23 +127,76 @@
         .patient-row:hover {
             background-color: #f0f0f0;
         }
+
+        /* Style pour la barre de recherche */
+        #search_bar {
+            width: 300px; /* Largeur de la barre de recherche */
+            padding: 10px; /* Espacement intérieur */
+            border: 1px solid #ddd; /* Bordure grise */
+            border-radius: 5px; /* Coins arrondis */
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1); /* Ombre légère */
+            font-size: 1rem; /* Taille de la police */
+            margin-right: 10px; /* Espacement à droite */
+            transition: border-color 0.3s; /* Transition douce pour la couleur de la bordure */
+        }
+
+        #search_bar:focus {
+            border-color: #3498db; /* Couleur de bordure au focus */
+            outline: none; /* Supprimer l'outline par défaut */
+        }
+
+        /* Style pour le sélecteur de recherche */
+        #search_type {
+            padding: 10px; /* Espacement intérieur */
+            border: 1px solid #ddd; /* Bordure grise */
+            border-radius: 5px; /* Coins arrondis */
+            background-color: white; /* Couleur de fond */
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1); /* Ombre légère */
+            font-size: 1rem; /* Taille de la police */
+            cursor: pointer; /* Curseur en forme de main */
+            transition: border-color 0.3s; /* Transition douce pour la couleur de la bordure */
+        }
+
+        #search_type:focus {
+            border-color: #3498db; /* Couleur de bordure au focus */
+            outline: none; /* Supprimer l'outline par défaut */
+        }
+
+        /* Ajout d'un conteneur pour centrer la barre de recherche et le sélecteur */
+        .search-container {
+            display: flex; /* Flexbox pour aligner les éléments */
+            justify-content: center; /* Centrer horizontalement */
+            margin-bottom: 20px; /* Espacement en bas */
+        }
+
+
     </style>
     <div class="patient-list-container">
-        <h1 class="page-title">Liste des patients</h1>
+        <h1 class="page-title">Liste des patients</h1><br><br>
+
+    </div>
+    <div class="search-container">
+        <input type="text" id="search_bar" oninput="search()" placeholder="Rechercher...">
+        <select id="search_type">
+            <option value="id">ID</option>
+            <option value="name">Nom</option>
+            <option value="prenom">Prénom</option>
+            <option value="date">Date de Naissance</option>
+        </select>
     </div>
 
     <div class="patient-list-container">
         <table id="patient_table" class="patient-table">
             <thead>
             <tr id="patient_table_header">
-                <th>ID</th>
-                <th>Nom</th>
-                <th>Prénom</th>
-                <th>Date de Naissance</th>
+                <th onclick="elements_sort(this)">ID</th>
+                <th onclick="elements_sort(this)">Nom</th>
+                <th onclick="elements_sort(this)">Prénom</th>
+                <th onclick="elements_sort(this)">Date de Naissance</th>
                 <th>Action</th>
             </tr>
             </thead>
-            <tbody>
+            <tbody id="table_body">
             @forelse($patients as $patient)
                 <tr class="patient-row">
                     <td>{{$patient->id}}</td>
@@ -166,6 +219,129 @@
     </div>
 
     <script>
+
+        function search(){
+            let search = document.getElementById("search_bar").value.toLowerCase();
+            let selected = document.getElementById("search_type").value;
+            let patients = <?php echo json_encode($patients->toArray()) ?>;
+
+            console.log(search);
+            console.log(selected)
+
+            let patients_list = [];
+
+            patients.forEach(patient => {
+                if(selected === "id"){
+                    if(patient.id.toString().includes(search)){
+                        patients_list.push(patient)
+                    }
+                }else if(selected === "name"){
+                    if(patient.nom.toString().toLowerCase().includes(search)){
+                        patients_list.push(patient)
+                    }
+                }else if(selected === "prenom"){
+                    if(patient.prenom.toString().toLowerCase().includes(search)){
+                        patients_list.push(patient)
+                    }
+                }else{
+                    if(patient.dateNaissance.toString().toLowerCase().includes(search)){
+                        patients_list.push(patient)
+                    }
+                }
+            })
+
+            display(patients_list);
+        }
+
+        function elements_sort(header){
+            let value = header.innerText.toLowerCase()
+
+            let patients = <?php echo json_encode($patients->toArray()) ?>;
+            if(value === "nom"){
+                patients.sort((a, b) => a.nom.localeCompare(b.nom));
+                display(patients);
+            }else if(value === "prénom"){
+                patients.sort((a, b) => a.prenom.localeCompare(b.prenom));
+                display(patients);
+            }else if(value === "date de naissance"){
+                patients.sort((a, b) => a.dateNaissance.localeCompare(b.dateNaissance));
+                display(patients);
+            }else if(value === "id"){
+                patients.sort((a, b) => a.id - b.id);
+                display(patients);
+            }else{
+                console.log("Bad colomn !");
+            }
+        }
+
+        function display(patients){
+            let rows = document.querySelectorAll("#patient_table td");
+
+            //Clear the table
+            rows.forEach(row => {
+                row.remove();
+            })
+
+            let body = document.getElementById("table_body");
+            patients.forEach(patient => {
+                let tr = document.createElement('tr');
+                tr.classList.add('patient-row')
+
+                let td_id = document.createElement('td');
+                td_id.innerHTML = patient.id;
+                tr.appendChild(td_id);
+
+                for(let i = 0; i<3; i++){
+                    var td = document.createElement('td');
+                    if(i === 0){
+                        td.innerHTML = patient.nom;
+                    }else if(i === 1){
+                        td.innerHTML = patient.prenom;
+                    }else if(i === 2){
+                        td.innerHTML = patient.dateNaissance;
+                    }
+
+                    tr.appendChild(td);
+                }
+
+                var td_btn = document.createElement('td');
+                for(let i = 0; i<3; i++){
+                    let btn = document.createElement('button');
+                    btn.id = i+1;
+
+                    if(i === 0){
+                        btn.classList.add('btn-delete');
+                        btn.addEventListener('click', function() {
+                            btn_del(patient.id);
+                        });
+                        btn.innerHTML = "SUPPRIMER";
+                    }else if(i === 1){
+                        btn.classList.add('btn-edit');
+                        btn.addEventListener('click', function() {
+                            btn_edit(patient.id);
+                        });
+                        btn.innerHTML = "MODIFIER";
+                    }else{
+                        btn.classList.add('btn-view');
+                        btn.addEventListener('click', function() {
+                            btn_view(patient.id);
+                        });
+                        btn.innerHTML = "VOIR";
+                    }
+
+                    td_btn.appendChild(btn);
+                }
+                tr.appendChild(td_btn);
+                tr.addEventListener('dblclick', function() {
+                    // Get the id from the first cell of the row
+                    const id = this.cells[0].innerText;
+                    // Redirect to the patient specific page with the id
+                    window.location.href = `/patient_spec/${id}`;
+                });
+                body.appendChild(tr);
+            })
+        }
+
         // Select all rows in the table body with the id 'patient_table'
         document.querySelectorAll('#patient_table tbody tr').forEach(row => {
             // Add a double-click event listener to each row

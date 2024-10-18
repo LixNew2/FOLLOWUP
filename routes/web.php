@@ -3,7 +3,7 @@
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
-    return view('welcome');
+    return view('login/login');
 });
 
 Route::get('/patient', [\App\Http\Controllers\CPatient::class, 'show_page']);
@@ -20,3 +20,4 @@ Route::get('/incident_spec/{id}/{patient_id}/{desc}/{level}/{date}', [\App\Http\
 
 Route::post('/patient/add', [\App\Http\Controllers\CPatient::class, 'add_patient'])->name('patient.add');
 Route::post('/incident/add', [\App\Http\Controllers\CIncident::class, 'add_incident'])->name('incident.add');
+Route::post('/login/connect', [\App\Http\Controllers\CLogin::class, 'login'])->name('login.con');

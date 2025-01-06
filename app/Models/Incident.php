@@ -17,7 +17,7 @@ class Incident extends Model
         $i = new Incident(); // Get an instance of incident table
 
         // Get the user input values
-        $description = $request->input('desc');
+        $description = filter_var($request->input('desc'), FILTER_SANITIZE_STRING);
         $level = $request->input('level_select');
         $date = $request->input('date_incident');
         $id_patient = $request->input('patient_select');
@@ -40,7 +40,7 @@ class Incident extends Model
         $i = Incident::find($id);
 
         // Pass recovered value
-        $i->description = $desc;
+        $i->description = filter_var($desc, FILTER_SANITIZE_STRING);
         $i->level = $level;
         $i->date = $date;
 

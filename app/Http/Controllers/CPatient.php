@@ -20,8 +20,8 @@ class CPatient extends Controller{
     }
 
     //General edit patient method
-    public function edit_patient($id, $name, $lastname, $date){
-        if(Patient::edit($id, $name, $lastname, $date)){ // If patient has been edited, redirect
+    public function edit_patient($id, $name, $lastname, $date, $email, $age_surdite){
+        if(Patient::edit($id, $name, $lastname, $date, $email, $age_surdite)){ // If patient has been edited, redirect
             return redirect('/patient');
         };
     }
@@ -46,3 +46,4 @@ class CPatient extends Controller{
         return view('Patient/patient_spec', compact('patient', 'incidents'));
     }
 }
+

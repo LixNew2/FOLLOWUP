@@ -59,4 +59,9 @@ class CIncident extends Controller{
         };
 
     }
+
+    //API
+    public function store(){
+
+    }
 }

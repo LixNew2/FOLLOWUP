@@ -76,6 +76,14 @@
                 <label for="date_naiss">Date de naissance :</label>
                 <input type="date" id="date_naiss" name="date_naiss" class="form-input" required>
             </div>
+            <div class="form-group">
+                <label for="email">Email :</label>
+                <input type="email" id="email" name="email" class="form-input" pattern="^[A-z-a-z]+@(gmail|outlook|orange|wanadoo)\.(com|fr|eu)$" required>
+            </div>
+            <div class="form-group">
+                <label for="age_depistage_surdite">Age dépisatage surdité :</label>
+                <input type="number" id="age_depistage_surdite" name="age_depistage_surdite" class="form-input" min="0" max="120" required>
+            </div>
             <button type="submit" class="btn-submit">Ajouter</button>
         </form>
     </div>

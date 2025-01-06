@@ -51,7 +51,7 @@
             margin: 0 auto;
         }
 
-        #patient_table_header th {
+        #incident_table_header th {
             background-color: #34495e;
             color: white;
             padding: 10px;
@@ -142,23 +142,25 @@
         <div class="patient-details">
             <h1 class="patient-name">{{$patient->nom}} {{$patient->prenom}}</h1>
             <p class="patient-dob"><strong>Date de naissance :</strong> {{$patient->dateNaissance}}</p>
+            <p class="patient-dob"><strong>Email :</strong> {{$patient->email}}</p>
+            <p class="patient-dob"><strong>Age dépistage surdité :</strong> {{$patient->ageDespistageSurdite}} ans</p>
         </div>
     </div>
 
     <div class="incident-section">
         <h2 class="incident-title">Incidents</h2>
-        <table id="patient_table" class="incident-table">
+        <table id="incident_table" class="incident-table">
             <thead>
-            <tr id="patient_table_header">
-                <th>ID</th>
-                <th>Description</th>
-                <th>Niveau</th>
-                <th>Date</th>
-                <th>ID Patient</th>
+            <tr id="incident_table_header">
+                <th onclick="elements_sort(this)">ID</th>
+                <th onclick="elements_sort(this)">Description</th>
+                <th onclick="elements_sort(this)">Niveau</th>
+                <th onclick="elements_sort(this)">Date</th>
+                <th onclick="elements_sort(this)">ID Patient</th>
                 <th>Action</th>
             </tr>
             </thead>
-            <tbody>
+            <tbody id="table_body">
             @forelse($incidents as $incident)
                 <tr class="incident-row">
                     <td>{{$incident->id}}</td>
@@ -173,7 +175,7 @@
                 </tr>
             @empty
                 <tr>
-                    <td colspan="6" class="no-incidents">Aucun incident enregistré.</td>
+                    <td colspan="6" class="no-incidents">Aucun incident enregistr�.</td>
                 </tr>
             @endforelse
             </tbody>
@@ -181,8 +183,92 @@
     </div>
 
     <script>
+        function elements_sort(header){
+            let value = header.innerText.toLowerCase()
+
+            let incidents = <?php echo json_encode($incidents->toArray()) ?>;
+            if(value === "description"){
+                incidents.sort((a, b) => a.description.localeCompare(b.description));
+                display(incidents);
+            }else if(value === "niveau"){
+                incidents.sort((a, b) => a.level - b.level);
+                display(incidents);
+            }else if(value === "date"){
+                incidents.sort((a, b) => a.date.localeCompare(b.date));
+                display(incidents);
+            }else if(value === "id"){
+                incidents.sort((a, b) => a.id - b.id);
+                display(incidents);
+            }else if(value === "id patient"){
+                incidents.sort((a, b) => a.id_patient - b.id_patient);
+                display(incidents);
+            }else {
+                console.log("Bad colomn !");
+            }
+        }
+
+        function display(incidents){v
+            let rows = document.querySelectorAll("#incident_table td");
+
+            //Clear the table
+            rows.forEach(row => {
+                row.remove();
+            })
+
+            let body = document.getElementById("table_body");
+            incidents.forEach(incident => {
+                let tr = document.createElement('tr');
+                tr.classList.add('incident-row')
+
+                let td_id = document.createElement('td');
+                td_id.innerHTML = incident.id;
+                tr.appendChild(td_id);
+
+                for(let i = 0; i<3; i++){
+                    var td = document.createElement('td');
+                    if(i === 0){
+                        td.innerHTML = incident.description;
+                    }else if(i === 1){
+                        td.innerHTML = incident.level;
+                    }else if(i === 2){
+                        td.innerHTML = incident.date;
+                    }
+
+                    tr.appendChild(td);
+                }
+
+                var id = document.createElement('td');
+                id.innerHTML = incident.id_patient;
+                tr.appendChild(id);
+
+                var td_btn = document.createElement('td');
+                for(let i = 0; i<2; i++){
+                    let btn = document.createElement('button');
+                    btn.id = i+1;
+
+                    if(i === 0){
+                        btn.classList.add('btn-delete');
+                        btn.addEventListener('click', function() {
+                            btn_del(incident.id);
+                        });
+                        btn.innerHTML = "SUPPRIMER";
+                    }else{
+                        btn.classList.add('btn-edit');
+                        btn.addEventListener('click', function() {
+                            btn_edit(incident.id);
+                        });
+                        btn.innerHTML = "MODIFIER";
+                    }
+
+                    td_btn.appendChild(btn);
+                }
+                tr.appendChild(td_btn);
+                body.appendChild(tr);
+            })
+        }
+
         function btn_del(id, patient_id){
-            if(confirm('Êtes-vous sûr de vouloir supprimer cet incident ?')) {
+            if(confirm('�tes-vous s�r de vouloir supprimer cet incident ?')) {
                 window.location.href = `/incident/${id}/${patient_id}`;
             }
         }

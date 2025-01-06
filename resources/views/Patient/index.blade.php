@@ -14,7 +14,7 @@
             box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
             padding: 20px;
             width: 100%;
-            max-width: 1000px;
+            max-width: 1300px;
             border-collapse: collapse;
         }
 
@@ -127,29 +127,86 @@
         .patient-row:hover {
             background-color: #f0f0f0;
         }
+
+        /* Style pour la barre de recherche */
+        #search_bar {
+            width: 300px; /* Largeur de la barre de recherche */
+            padding: 10px; /* Espacement int�rieur */
+            border: 1px solid #ddd; /* Bordure grise */
+            border-radius: 5px; /* Coins arrondis */
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1); /* Ombre l�g�re */
+            font-size: 1rem; /* Taille de la police */
+            margin-right: 10px; /* Espacement � droite */
+            transition: border-color 0.3s; /* Transition douce pour la couleur de la bordure */
+        }
+
+        #search_bar:focus {
+            border-color: #3498db; /* Couleur de bordure au focus */
+            outline: none; /* Supprimer l'outline par d�faut */
+        }
+
+        /* Style pour le s�lecteur de recherche */
+        #search_type {
+            padding: 10px; /* Espacement int�rieur */
+            border: 1px solid #ddd; /* Bordure grise */
+            border-radius: 5px; /* Coins arrondis */
+            background-color: white; /* Couleur de fond */
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1); /* Ombre l�g�re */
+            font-size: 1rem; /* Taille de la police */
+            cursor: pointer; /* Curseur en forme de main */
+            transition: border-color 0.3s; /* Transition douce pour la couleur de la bordure */
+        }
+
+        #search_type:focus {
+            border-color: #3498db; /* Couleur de bordure au focus */
+            outline: none; /* Supprimer l'outline par d�faut */
+        }
+
+        /* Ajout d'un conteneur pour centrer la barre de recherche et le s�lecteur */
+        .search-container {
+            display: flex; /* Flexbox pour aligner les �l�ments */
+            justify-content: center; /* Centrer horizontalement */
+            margin-bottom: 20px; /* Espacement en bas */
+        }
+
+
     </style>
     <div class="patient-list-container">
-        <h1 class="page-title">Liste des patients</h1>
+        <h1 class="page-title">Liste des patients</h1><br><br>
+
+    </div>
+    <div class="search-container">
+        <input type="text" id="search_bar" oninput="search()" placeholder="Rechercher...">
+        <select id="search_type">
+            <option value="id">ID</option>
+            <option value="name">Nom</option>
+            <option value="prenom">Pr�nom</option>
+            <option value="date">Date de Naissance</option>
+        </select>
     </div>
 
     <div class="patient-list-container">
         <table id="patient_table" class="patient-table">
             <thead>
             <tr id="patient_table_header">
-                <th>ID</th>
-                <th>Nom</th>
-                <th>Prénom</th>
-                <th>Date de Naissance</th>
+                <th onclick="elements_sort(this)">ID</th>
+                <th onclick="elements_sort(this)">Nom</th>
+                <th onclick="elements_sort(this)">Pr�nom</th>
+                <th onclick="elements_sort(this)">Date de Naissance</th>
+                <th onclick="elements_sort(this)">Email</th>
+                <th onclick="elements_sort(this)">Age dépistage surdié</th>
                 <th>Action</th>
             </tr>
             </thead>
-            <tbody>
+            <tbody id="table_body">
             @forelse($patients as $patient)
                 <tr class="patient-row">
                     <td>{{$patient->id}}</td>
                     <td>{{$patient->nom}}</td>
                     <td>{{$patient->prenom}}</td>
                     <td>{{$patient->dateNaissance}}</td>
+                    <td>{{$patient->email}}</td>
+                    <td>{{$patient->ageDespistageSurdite}}</td>
                     <td>
                         <button id="b1" class="btn-delete" onclick="btn_del({{$patient->id}})">SUPPRIMER</button>
                         <button id="b2" class="btn-edit" onclick="btn_edit({{$patient->id}}, event)">MODIFIER</button>
@@ -158,7 +215,7 @@
                 </tr>
             @empty
                 <tr>
-                    <td colspan="5" class="no-patients">Aucun patient enregistré.</td>
+                    <td colspan="5" class="no-patients">Aucun patient enregistr�.</td>
                 </tr>
             @endforelse
             </tbody>
@@ -166,6 +223,129 @@
     </div>
 
     <script>
+
+        function search(){
+            let search = document.getElementById("search_bar").value.toLowerCase();
+            let selected = document.getElementById("search_type").value;
+            let patients = <?php echo json_encode($patients->toArray()) ?>;
+
+            console.log(search);
+            console.log(selected)
+
+            let patients_list = [];
+
+            patients.forEach(patient => {
+                if(selected === "id"){
+                    if(patient.id.toString().includes(search)){
+                        patients_list.push(patient)
+                    }
+                }else if(selected === "name"){
+                    if(patient.nom.toString().toLowerCase().includes(search)){
+                        patients_list.push(patient)
+                    }
+                }else if(selected === "prenom"){
+                    if(patient.prenom.toString().toLowerCase().includes(search)){
+                        patients_list.push(patient)
+                    }
+                }else{
+                    if(patient.dateNaissance.toString().toLowerCase().includes(search)){
+                        patients_list.push(patient)
+                    }
+                }
+            })
+
+            display(patients_list);
+        }
+
+        function elements_sort(header){
+            let value = header.innerText.toLowerCase()
+
+            let patients = <?php echo json_encode($patients->toArray()) ?>;
+            if(value === "nom"){
+                patients.sort((a, b) => a.nom.localeCompare(b.nom));
+                display(patients);
+            }else if(value === "pr�nom"){
+                patients.sort((a, b) => a.prenom.localeCompare(b.prenom));
+                display(patients);
+            }else if(value === "date de naissance"){
+                patients.sort((a, b) => a.dateNaissance.localeCompare(b.dateNaissance));
+                display(patients);
+            }else if(value === "id"){
+                patients.sort((a, b) => a.id - b.id);
+                display(patients);
+            }else{
+                console.log("Bad colomn !");
+            }
+        }
+
+        function display(patients){
+            let rows = document.querySelectorAll("#patient_table td");
+
+            //Clear the table
+            rows.forEach(row => {
+                row.remove();
+            })
+
+            let body = document.getElementById("table_body");
+            patients.forEach(patient => {
+                let tr = document.createElement('tr');
+                tr.classList.add('patient-row')
+
+                let td_id = document.createElement('td');
+                td_id.innerHTML = patient.id;
+                tr.appendChild(td_id);
+
+                for(let i = 0; i<3; i++){
+                    var td = document.createElement('td');
+                    if(i === 0){
+                        td.innerHTML = patient.nom;
+                    }else if(i === 1){
+                        td.innerHTML = patient.prenom;
+                    }else if(i === 2){
+                        td.innerHTML = patient.dateNaissance;
+                    }
+
+                    tr.appendChild(td);
+                }
+
+                var td_btn = document.createElement('td');
+                for(let i = 0; i<3; i++){
+                    let btn = document.createElement('button');
+                    btn.id = i+1;
+
+                    if(i === 0){
+                        btn.classList.add('btn-delete');
+                        btn.addEventListener('click', function() {
+                            btn_del(patient.id);
+                        });
+                        btn.innerHTML = "SUPPRIMER";
+                    }else if(i === 1){
+                        btn.classList.add('btn-edit');
+                        btn.addEventListener('click', function() {
+                            btn_edit(patient.id);
+                        });
+                        btn.innerHTML = "MODIFIER";
+                    }else{
+                        btn.classList.add('btn-view');
+                        btn.addEventListener('click', function() {
+                            btn_view(patient.id);
+                        });
+                        btn.innerHTML = "VOIR";
+                    }
+
+                    td_btn.appendChild(btn);
+                }
+                tr.appendChild(td_btn);
+                tr.addEventListener('dblclick', function() {
+                    // Get the id from the first cell of the row
+                    const id = this.cells[0].innerText;
+                    // Redirect to the patient specific page with the id
+                    window.location.href = `/patient_spec/${id}`;
+                });
+                body.appendChild(tr);
+            })
+        }
+
         // Select all rows in the table body with the id 'patient_table'
         document.querySelectorAll('#patient_table tbody tr').forEach(row => {
             // Add a double-click event listener to each row
@@ -180,7 +360,7 @@
         // Function to delete a patient
         function btn_del(id){
             // Confirm the deletion
-            if (confirm('Êtes-vous sûr de vouloir supprimer ce patient ?')) {
+            if (confirm('�tes-vous s�r de vouloir supprimer ce patient ?')) {
                 // Redirect to the delete patient URL
                 window.location.href = `/patient/${id}`;
             }
@@ -200,10 +380,20 @@
             var base_values = [];
 
             // Loop through the first three cells to create input fields
-            for(i = 1; i<4; i++){
+            for(i = 1; i<6; i++){
                 const input = document.createElement('input');
                 // Set input type based on the cell index
-                input.type = (i !== 3) ? "text" : "date";
+                if(i === 3){
+                    input.type = "date"
+                }else if(i === 4){
+                    input.type = "email"
+                }else if(i === 5){
+                    input.type = "number"
+                    input.min = 0;
+                    input.max = 120;
+                }else{
+                    input.type = "text"
+                }
                 // Set input value to the cell's innerHTML
                 input.value = row.cells[i].innerHTML;
                 // Set input id
@@ -240,18 +430,20 @@
                         const i1 = document.querySelector("#i1").value;
                         const i2 = document.querySelector("#i2").value;
                         const i3 = document.querySelector("#i3").value;
+                        const i4 = document.querySelector("#i4").value;
+                        const i5 = document.querySelector("#i5").value;
                         // Redirect to the update patient URL with the new values
-                        window.location.href = `/patient/${id}/${i1}/${i2}/${i3}`;
+                        window.location.href = `/patient/${id}/${i1}/${i2}/${i3}/${i4}/${i5}`;
                     }
                 }else{
                     // Cancel button onclick event
                     btn.onclick = function(){
                         // Get the original buttons
-                        const btn_sup = row.cells[4].querySelector('#b1');
-                        const btn_edit = row.cells[4].querySelector('#b2');
-                        const btn_view = row.cells[4].querySelector('#b3');
-                        const _b1 = row.cells[4].querySelector('#_b0');
-                        const _b2 = row.cells[4].querySelector('#_b1');
+                        const btn_sup = row.cells[6].querySelector('#b1');
+                        const btn_edit = row.cells[6].querySelector('#b2');
+                        const btn_view = row.cells[6].querySelector('#b3');
+                        const _b1 = row.cells[6].querySelector('#_b0');
+                        const _b2 = row.cells[6].querySelector('#_b1');
 
                         // Show the original buttons
                         btn_sup.classList.add('btn-delete');
@@ -266,7 +458,7 @@
                         _b2.remove();
 
                         // Restore the original cell values
-                        for(i = 1; i<4; i++){
+                        for(i = 1; i<6; i++){
                             row.cells[i].innerHTML = "";
                             row.cells[i].innerHTML = base_values[i-1];
                         }
@@ -274,13 +466,13 @@
                 }
 
                 // Append the button to the cell
-                row.cells[4].appendChild(btn);
+                row.cells[6].appendChild(btn);
             }
 
             // Get the original buttons
-            const btn_sup = row.cells[4].querySelector('#b1');
-            const btn_edit = row.cells[4].querySelector('#b2');
-            const btn_view = row.cells[4].querySelector('#b3');
+            const btn_sup = row.cells[6].querySelector('#b1');
+            const btn_edit = row.cells[6].querySelector('#b2');
+            const btn_view = row.cells[6].querySelector('#b3');
 
             // Hide the original buttons
             btn_sup.classList.add('show-off');

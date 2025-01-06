@@ -39,6 +39,7 @@
 </style>
 <body>
     <div id="menu">
+        <a href="/login">Se Connecter</a>
         <a href="/" id="btn1">Home</a>
         <a href="/patient">Patients</a>
         <a href="/incident">Incidents</a>

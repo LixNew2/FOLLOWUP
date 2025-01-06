@@ -117,27 +117,27 @@
         /* Style pour la barre de recherche */
         #search_bar {
             width: 300px; /* Largeur de la barre de recherche */
-            padding: 10px; /* Espacement intérieur */
+            padding: 10px; /* Espacement intï¿½rieur */
             border: 1px solid #ddd; /* Bordure grise */
             border-radius: 5px; /* Coins arrondis */
-            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1); /* Ombre légère */
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1); /* Ombre lï¿½gï¿½re */
             font-size: 1rem; /* Taille de la police */
-            margin-right: 10px; /* Espacement à droite */
+            margin-right: 10px; /* Espacement ï¿½ droite */
             transition: border-color 0.3s; /* Transition douce pour la couleur de la bordure */
         }
 
         #search_bar:focus {
             border-color: #3498db; /* Couleur de bordure au focus */
-            outline: none; /* Supprimer l'outline par défaut */
+            outline: none; /* Supprimer l'outline par dï¿½faut */
         }
 
-        /* Style pour le sélecteur de recherche */
+        /* Style pour le sï¿½lecteur de recherche */
         #search_type {
-            padding: 10px; /* Espacement intérieur */
+            padding: 10px; /* Espacement intï¿½rieur */
             border: 1px solid #ddd; /* Bordure grise */
             border-radius: 5px; /* Coins arrondis */
             background-color: white; /* Couleur de fond */
-            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1); /* Ombre légère */
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1); /* Ombre lï¿½gï¿½re */
             font-size: 1rem; /* Taille de la police */
             cursor: pointer; /* Curseur en forme de main */
             transition: border-color 0.3s; /* Transition douce pour la couleur de la bordure */
@@ -145,12 +145,12 @@
 
         #search_type:focus {
             border-color: #3498db; /* Couleur de bordure au focus */
-            outline: none; /* Supprimer l'outline par défaut */
+            outline: none; /* Supprimer l'outline par dï¿½faut */
         }
 
-        /* Ajout d'un conteneur pour centrer la barre de recherche et le sélecteur */
+        /* Ajout d'un conteneur pour centrer la barre de recherche et le sï¿½lecteur */
         .search-container {
-            display: flex; /* Flexbox pour aligner les éléments */
+            display: flex; /* Flexbox pour aligner les ï¿½lï¿½ments */
             justify-content: center; /* Centrer horizontalement */
             margin-bottom: 20px; /* Espacement en bas */
         }
@@ -197,7 +197,7 @@
                 </tr>
             @empty
                 <tr>
-                    <td colspan="6" class="no-incidents">Aucun incident enregistré.</td>
+                    <td colspan="6" class="no-incidents">Aucun incident enregistrï¿½.</td>
                 </tr>
             @endforelse
             </tbody>
@@ -328,7 +328,7 @@
         }
 
         function btn_del(id){
-            if (confirm('Êtes-vous sûr de vouloir supprimer cet incident ?')) {
+            if (confirm('ï¿½tes-vous sï¿½r de vouloir supprimer cet incident ?')) {
                 window.location.href = `/incident/${id}`;
             }
         }

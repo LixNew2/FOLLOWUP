@@ -3,7 +3,7 @@
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
-    return view('welcome');
+    return view('login/login');
 });
 
 Route::get('/patient', [\App\Http\Controllers\CPatient::class, 'show_page'])->middleware('auth:sanctum');

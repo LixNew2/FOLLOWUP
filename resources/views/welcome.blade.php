@@ -150,4 +150,3 @@
         <p>Les implants cochléaires permettent aux personnes atteintes de surdité sévère à profonde de retrouver progressivement l'audition. FollowUP joue un rôle clé dans le suivi post-implantation en offrant une solution de gestion des incidents et des réajustements nécessaires pour optimiser l'usage des implants.</p>
     </div>
 @stop
-
